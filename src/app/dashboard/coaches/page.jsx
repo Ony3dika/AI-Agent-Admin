@@ -10,7 +10,7 @@ import loader from "@/../../public/loader2.svg";
 const CoachPage = () => {
   const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
   const [coaches, setCoaches] = useState([]);
 
   // Fetch Coaches
