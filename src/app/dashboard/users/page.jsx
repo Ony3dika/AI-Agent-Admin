@@ -1,17 +1,21 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Dropdown from "@/components/dropdown";
 import { IoIosArrowDown } from "react-icons/io";
 import { RxReload } from "react-icons/rx";
-import { CiSearch } from "react-icons/ci";
+import { CiSearch, CiExport } from "react-icons/ci";
+import { CSVLink } from "react-csv";
 import Image from "next/image";
 import loader from "@/../../public/loader2.svg";
 
 const UsersPage = () => {
   const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const modalRef = useRef(null);
   const [error, setError] = useState(null);
   const [clients, setClients] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Fetch Clients
   const fetchClients = async () => {
@@ -38,8 +42,37 @@ const UsersPage = () => {
     }
   };
 
+  const filteredClients = clients.filter(
+    (client) =>
+      client.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      client.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+       client.is_active.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   useEffect(() => {
     fetchClients();
+  }, []);
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const handleModalClick = (e) => {
+    e.stopPropagation(); // Prevent closing modal when modal content is clicked
+  };
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
   }, []);
 
   return (
@@ -54,16 +87,55 @@ const UsersPage = () => {
         <Dropdown />
       </section>
 
-      <section className='flex text-sm mt-5 mb-3 w-1/3 bg-[#1f232e] py-2 px-4 rounded-lg border-2 items-center border-[#262a35]'>
-        <div className='basis-[13%]'>
-          <CiSearch size={"1.7rem"}/>
-        </div>
-        <input
-          type='text'
-          className='bg-transparent basis-full outline-none'
-          placeholder='Search Users'
-        />
+      <section className='flex justify-between items-center'>
+        <section className='flex text-sm mt-5 mb-3 w-1/3 bg-[#1f232e] py-2 px-4 rounded-lg border-2 items-center border-[#262a35]'>
+          <div className='basis-[13%]'>
+            <CiSearch size={"1.7rem"} />
+          </div>
+          <input
+            type='text'
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className='bg-transparent basis-full outline-none'
+            placeholder='Search Users'
+          />
+        </section>
+
+        <section className='flex items-center text-sm'>
+          <div className='flex items-center relative mr-5'>
+            <p className='text-txt mr-3'>Status</p>
+
+            <select className='w-20 py-2 px-3 mt-2 bg-border placeholder:text-white text-white border-2 border-[#262A35] rounded-lg transition duration-300 ease focus:shadow-md appearance-none cursor-pointer outline-none'>
+              <option onClick={() => setSearchQuery("Online")}>Online</option>
+              <option onClick={() => setSearchQuery("Offline")}>Offline</option>
+            </select>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              stroke-width='1'
+              stroke='currentColor'
+              className='h-6 text-txt2'
+            >
+              <path
+                stroke-linecap='round'
+                stroke-linejoin='round'
+                d='M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9'
+              />
+            </svg>
+          </div>
+
+          <CSVLink
+            className='bg-gradient-to-r from-purple to-blue text-white px-4 py-2 flex items-center rounded-md'
+            data={clients}
+          >
+            {" "}
+            <CiExport size={"1.2rem"} className='mr-2' />
+            Export CSV
+          </CSVLink>
+        </section>
       </section>
+
       {/* Clients */}
       <table className='table-fixed w-full text-sm'>
         <thead className='bg-[#262a35]'>
@@ -106,7 +178,7 @@ const UsersPage = () => {
               </td>
             </tr>
           ) : (
-            clients.map((item, index) => {
+            filteredClients.map((item, index) => {
               return (
                 <tr
                   className={`text-white border-y border-[#262a35] ${
@@ -125,7 +197,10 @@ const UsersPage = () => {
                     {item.is_active ? "Online" : "Offline"}
                   </td>
                   <td>
-                    <button className='bg-border m-1 px-4 py-1 flex items-center rounded-md'>
+                    <button
+                      onClick={openModal}
+                      className='bg-border m-1 px-4 py-1 flex items-center rounded-md'
+                    >
                       Actions <IoIosArrowDown className='text-txt' />
                     </button>
                   </td>
@@ -135,6 +210,15 @@ const UsersPage = () => {
           )}
         </tbody>
       </table>
+      {isOpen && (
+        <section className='fixed top-0 left-0 w-screen z-20 h-screen bg-black/30 backdrop-blur rounded-md shadow-md'>
+          <div
+            onClick={handleModalClick}
+            ref={modalRef}
+            className='h-[16%] aspect-square absolute bg-[#14161c] flex flex-col border border-border items-center justify-center right-20 top-40 rounded-md'
+          ></div>
+        </section>
+      )}
     </main>
   );
 };

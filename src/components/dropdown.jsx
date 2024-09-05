@@ -38,7 +38,7 @@ const Modal = () => {
   return (
     <div className='justify-end flex items-center'>
       <div className='flex items-center'>
-        <RxQuestionMarkCircled className='text-txt' size={"1.7rem"} />
+        <RxQuestionMarkCircled className='text-txt' size={"1.5rem"} title="Help" />
 
         {/* Sub Menu */}
         <div className='flex items-center cursor-pointer' onClick={openModal}>
