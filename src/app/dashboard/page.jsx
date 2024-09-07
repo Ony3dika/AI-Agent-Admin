@@ -35,6 +35,8 @@ const DashPage = () => {
   const [error, setError] = useState(null);
   const [workspaces, setWorkspaces] = useState([]);
   const [coaches, setCoaches] = useState([]);
+  const [users, setUsers] = useState([]);
+
   const updateUser = useStore((state) => state.updateUser);
 
   //Settings
@@ -52,7 +54,7 @@ const DashPage = () => {
       }
       const data = await res.json();
 
-      console.log(data);
+      // console.log(data);
       updateUser({
         firstName: data.first_name,
         lastName: data.last_name,
@@ -96,7 +98,7 @@ const DashPage = () => {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${baseURL}/coaches`, {
+      const res = await fetch(`${baseURL}/admin/coaches/`, {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
@@ -106,8 +108,30 @@ const DashPage = () => {
       }
       const data = await res.json();
       setCoaches(data);
-      updateCoachLength(data.length);
-      console.log(data);
+      setIsLoading(false);
+    } catch (error) {
+      setError(error.message);
+      setIsLoading(false);
+    }
+  };
+
+  //Fetch Users
+  const fetchUsers = async () => {
+    const access_token = sessionStorage.getItem("authAdmin");
+    setError(null);
+    setIsLoading(true);
+
+    try {
+      const res = await fetch(`${baseURL}/admin/users/all`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+      if (!res.ok) {
+        throw new Error("Failed");
+      }
+      const data = await res.json();
+      setUsers(data);
       setIsLoading(false);
     } catch (error) {
       setError(error.message);
@@ -119,6 +143,7 @@ const DashPage = () => {
     fetchData();
     fetchSettings();
     fetchCoaches();
+    fetchUsers()
   }, []);
 
   const options = {
@@ -210,7 +235,7 @@ const DashPage = () => {
         <div className='basis-[32%] h-32 rounded-lg border-border border-2 bg-alt flex items-center justify-between p-5'>
           <div className='flex flex-col justify-between'>
             <p className='text-sm'>Total Users</p>
-            <p className='text-white text-3xl font-medium mt-5'>13,056</p>
+            <p className='text-white text-3xl font-medium mt-5'>{users && users.length}</p>
           </div>
 
           <FaUsers className='text-blue ' size={"4rem"} />
@@ -239,27 +264,27 @@ const DashPage = () => {
           </div>
         </div>
 
-        <div className='basis-[32%] rounded-lg border-border border-2 bg-alt p-5'>
+        <div className='basis-[32%] rounded-lg border-border border-2 bg-alt overflow-y-scroll p-5'>
           <p className='text-white text-xl'>Recent</p>
 
           <div className='mt-5'>
-            {workspaces.map((space) => (
+            {coaches.map((coach) => (
               <div
-                key={space.id}
+                key={coach.id}
                 className='flex justify-between items-center py-3 border-b-2 border-border'
               >
                 <div className='flex items-center'>
                   <Image
-                    src={head}
+                    src={coach.avatar ? coach.avatar : head}
                     width={700}
                     height={700}
                     className='w-10 h-10 rounded-full mr-2'
                     alt='coach'
                   />
-                  <p className='text-white text-sm'>Name</p>
+                  <p className='text-white text-sm'>{coach.name}</p>
                 </div>
                 <div>
-                  <p className='text-white text-sm'>Coach Status</p>
+                  <p className='text-white text-sm'>{coach.status}</p>
                 </div>
               </div>
             ))}

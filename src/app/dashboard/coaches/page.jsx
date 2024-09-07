@@ -7,6 +7,7 @@ import { CiSearch, CiExport } from "react-icons/ci";
 import { CSVLink } from "react-csv";
 import Image from "next/image";
 import loader from "@/../../public/loader2.svg";
+import head from "@/../../public/profile.svg";
 
 const CoachPage = () => {
   const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -24,7 +25,7 @@ const CoachPage = () => {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${baseURL}/clients`, {
+      const res = await fetch(`${baseURL}/admin/coaches/`, {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
@@ -42,17 +43,14 @@ const CoachPage = () => {
     }
   };
 
-  const filteredCoaches = coaches.filter(
-    (coach) =>
-      coach.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      coach.email.toLowerCase().includes(searchQuery.toLowerCase()) 
+  const filteredCoaches = coaches.filter((coach) =>
+    coach.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   useEffect(() => {
     fetchCoaches();
   }, []);
 
-  
   const openModal = () => {
     setIsOpen(true);
   };
@@ -76,7 +74,7 @@ const CoachPage = () => {
   }, []);
 
   return (
-    <main className='text-txt mt-5 h-[75vh] overflow-y-scroll'>
+    <main className='text-txt mt-5 h-[90vh] overflow-y-scroll'>
       <section className='flex h-16 w-full justify-between'>
         <div className='basis-1/3 flex'>
           <div>
@@ -191,12 +189,24 @@ const CoachPage = () => {
                   }`}
                   key={index}
                 >
-                  <td className='p-3'>{item.first_name}</td>
+                  <td className='p-3 flex items-center'>
+                    <Image
+                      width={700}
+                      height={700}
+                      className="w-10 h-10 rounded-full mr-2"
+                      src={item.avatar ? item.avatar : head}
+                      alt='coach'
+                    />
+                    <div>
+                      {item.name} <br />
+                      <span  className="text-xs text-txt2">{item.category}</span>
+                    </div>
+                  </td>
                   <td>{item.email}</td>
                   <td className='text-blue'>
                     {item.is_active ? "Active" : "Disabled"}
                   </td>
-                  <td>{item.industry}</td>
+                  <td>{item.views}</td>
                   <td>{item.role}</td>
 
                   <td>{formattedDate}</td>

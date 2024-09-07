@@ -24,7 +24,7 @@ const UsersPage = () => {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${baseURL}/clients`, {
+      const res = await fetch(`${baseURL}/admin/users/all`, {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
@@ -34,7 +34,7 @@ const UsersPage = () => {
       }
       const data = await res.json();
       setClients(data);
-      console.log(data);
+      // console.log(data);
       setIsLoading(false);
     } catch (error) {
       setError(error.message);
@@ -44,9 +44,9 @@ const UsersPage = () => {
 
   const filteredClients = clients.filter(
     (client) =>
-      client.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      client.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-       client.is_active.toLowerCase().includes(searchQuery.toLowerCase())
+      client.email.toLowerCase().includes(searchQuery.toLowerCase()) 
+      // client.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      //  client.is_active.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   useEffect(() => {
@@ -76,7 +76,7 @@ const UsersPage = () => {
   }, []);
 
   return (
-    <main className='text-txt mt-5 h-[75vh] overflow-y-scroll'>
+    <main className='text-txt mt-5 h-[90vh] overflow-y-scroll'>
       <section className='flex h-16 w-full justify-between'>
         <div className='basis-1/3 flex'>
           <div>

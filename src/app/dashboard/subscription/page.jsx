@@ -76,7 +76,7 @@ const SubPage = () => {
   }, []);
 
   return (
-    <main className='text-txt mt-5 h-[75vh] overflow-y-scroll'>
+    <main className='text-txt mt-5 h-[90vh] overflow-y-scroll'>
       <section className='flex h-16 w-full justify-between'>
         <div className='basis-1/3 flex'>
           <div>
