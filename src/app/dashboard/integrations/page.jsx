@@ -24,7 +24,7 @@ const IntPage = () => {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${baseURL}/clients`, {
+      const res = await fetch(`${baseURL}/admin/coaches/all-integrations`, {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
@@ -33,7 +33,7 @@ const IntPage = () => {
         throw new Error("Failed to fetch Clients");
       }
       const data = await res.json();
-      setInt(data);
+      // setInt(data);
       console.log(data);
       setIsLoading(false);
     } catch (error) {
@@ -42,36 +42,35 @@ const IntPage = () => {
     }
   };
 
-   const filteredSubs = int.filter(
-     (int) =>
-       int.first_name.toLowerCase().includes(searchQuery.toLowerCase())
-   );
+  const filteredSubs = int.filter((int) =>
+    int.first_name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-     useEffect(() => {
-       fetchInt();
-     }, []);
+  useEffect(() => {
+    fetchInt();
+  }, []);
 
-     const openModal = () => {
-       setIsOpen(true);
-     };
+  const openModal = () => {
+    setIsOpen(true);
+  };
 
-     const handleModalClick = (e) => {
-       e.stopPropagation(); // Prevent closing modal when modal content is clicked
-     };
+  const handleModalClick = (e) => {
+    e.stopPropagation(); // Prevent closing modal when modal content is clicked
+  };
 
-     useEffect(() => {
-       const handleOutsideClick = (e) => {
-         if (modalRef.current && !modalRef.current.contains(e.target)) {
-           setIsOpen(false);
-         }
-       };
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    };
 
-       document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("mousedown", handleOutsideClick);
 
-       return () => {
-         document.removeEventListener("mousedown", handleOutsideClick);
-       };
-     }, []);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
 
   return (
     <main className='text-txt mt-5 h-[75vh] overflow-y-scroll'>
@@ -143,9 +142,8 @@ const IntPage = () => {
             </th>
             <th className='text-start font-normal'>User Counts</th>
             <th className='text-start font-normal'>Access Key</th>
-            <th className='text-start font-normal'>Credit Left</th>
 
-            <th className='text-start font-normal'>Date Subscribed</th>
+            <th className='text-start font-normal'>Date Connected</th>
             <th className='text-start font-normal'>Status</th>
             <th className='text-start font-normal rounded-tr-lg'>Action</th>
           </tr>
@@ -154,7 +152,7 @@ const IntPage = () => {
         <tbody>
           {isLoading ? (
             <tr>
-              <td colSpan='7'>
+              <td colSpan='6'>
                 <center>
                   <Image src={loader} className='h-16' alt='loading' />
                   <p>Loading ...</p>
@@ -163,7 +161,7 @@ const IntPage = () => {
             </tr>
           ) : error ? (
             <tr>
-              <td colSpan='7' className='text-center p-5'>
+              <td colSpan='6' className='text-center p-5'>
                 <p className='inline'>{error}</p>
 
                 <button
@@ -186,7 +184,6 @@ const IntPage = () => {
                   <td className='p-3'>{item.first_name}</td>
                   <td>{item.email}</td>
                   <td>{item.credits}</td>
-                  <td>{item.industry}</td>
                   <td className='text-blue'>
                     {item.is_active ? "Online" : "Offline"}
                   </td>

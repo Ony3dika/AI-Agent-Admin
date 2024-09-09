@@ -204,7 +204,7 @@ const CoachPage = () => {
                   </td>
                   <td>{item.email}</td>
                   <td className='text-blue'>
-                    {item.is_active ? "Active" : "Disabled"}
+                    {item.status}
                   </td>
                   <td>{item.views}</td>
                   <td>{item.role}</td>

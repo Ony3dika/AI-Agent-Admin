@@ -26,16 +26,16 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
 );
 
 const DashPage = () => {
   const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [workspaces, setWorkspaces] = useState([]);
+  const [workspaces, setWorkspaces] = useState("0");
   const [coaches, setCoaches] = useState([]);
   const [users, setUsers] = useState([]);
+  const [dates, setDates] = useState([]);
 
   const updateUser = useStore((state) => state.updateUser);
 
@@ -74,7 +74,7 @@ const DashPage = () => {
     setIsLoading(true);
     const access_token = sessionStorage.getItem("authAdmin");
     try {
-      const res = await fetch(`${baseURL}/workspaces/`, {
+      const res = await fetch(`${baseURL}/admin/workspace/workspace-count/`, {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
@@ -83,7 +83,8 @@ const DashPage = () => {
         throw new Error("Failed to fetch data");
       }
       const data = await res.json();
-      setWorkspaces(data);
+      console.log(data);
+      setWorkspaces(data.total_workspace);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -107,6 +108,7 @@ const DashPage = () => {
         throw new Error("Failed to fetch Coaches");
       }
       const data = await res.json();
+      console.log(data);
       setCoaches(data);
       setIsLoading(false);
     } catch (error) {
@@ -131,6 +133,7 @@ const DashPage = () => {
         throw new Error("Failed");
       }
       const data = await res.json();
+      console.log(data);
       setUsers(data);
       setIsLoading(false);
     } catch (error) {
@@ -143,7 +146,27 @@ const DashPage = () => {
     fetchData();
     fetchSettings();
     fetchCoaches();
-    fetchUsers()
+    fetchUsers();
+
+    const formatDate = (date) => {
+      const day = date.getDate();
+      const month = date.toLocaleString("default", { month: "short" });
+      return `${day} ${month}`;
+    };
+
+    const calculateDates = () => {
+      const today = new Date();
+      const datesArray = [];
+
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date(today.getTime() - i * 24 * 60 * 60 * 1000);
+        datesArray.push(formatDate(date));
+      }
+
+      return datesArray;
+    };
+
+    setDates(calculateDates());
   }, []);
 
   const options = {
@@ -175,12 +198,12 @@ const DashPage = () => {
     },
   };
   const data = {
-    labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    labels: dates,
 
     datasets: [
       {
         label: "Coaches",
-        data: [5, 45, 250, 99, 86],
+        data: [5, 45, 50, 99, 86],
         borderColor: "#22B9E8",
         backgroundColor: "#22B9E8",
         pointBorderColor: "#ffffff",
@@ -189,7 +212,7 @@ const DashPage = () => {
 
       {
         label: "Users",
-        data: [70, 358, 138, 6, 390],
+        data: [70, 35, 38, 6, 30],
         borderColor: "#7540dc",
         backgroundColor: "#7540dc",
         pointBorderColor: "#ffffff",
@@ -221,27 +244,27 @@ const DashPage = () => {
       )}
 
       <section className='flex justify-between mt-5'>
-        <div className='basis-[32%] h-32 rounded-lg border-border border-2 bg-alt flex items-center justify-between p-5'>
+        <div className='basis-[32%] h-28 rounded-lg border-border border-2 bg-alt flex items-center justify-between p-5'>
           <div className='flex flex-col justify-between'>
             <p className='text-sm'>Total Workspaces</p>
-            <p className='text-white text-3xl font-medium mt-5'>
-              {workspaces && workspaces.length}
-            </p>
+            <p className='text-white text-3xl font-medium mt-5'>{workspaces}</p>
           </div>
 
           <BiSolidDashboard className='text-blue ' size={"4rem"} />
         </div>
 
-        <div className='basis-[32%] h-32 rounded-lg border-border border-2 bg-alt flex items-center justify-between p-5'>
+        <div className='basis-[32%] h-28 rounded-lg border-border border-2 bg-alt flex items-center justify-between p-5'>
           <div className='flex flex-col justify-between'>
             <p className='text-sm'>Total Users</p>
-            <p className='text-white text-3xl font-medium mt-5'>{users && users.length}</p>
+            <p className='text-white text-3xl font-medium mt-5'>
+              {users && users.length}
+            </p>
           </div>
 
           <FaUsers className='text-blue ' size={"4rem"} />
         </div>
 
-        <div className='basis-[32%] h-32 rounded-lg border-border border-2 bg-alt flex items-center justify-between p-5'>
+        <div className='basis-[32%] h-28 rounded-lg border-border border-2 bg-alt flex items-center justify-between p-5'>
           <div className='flex flex-col justify-between'>
             <p className='text-sm'>Total Coaches</p>
             <p className='text-white text-3xl font-medium mt-5'>
@@ -255,11 +278,22 @@ const DashPage = () => {
 
       {/* Performance */}
 
-      <section className='flex justify-between mt-5 h-[60vh]'>
+      <section className='flex justify-between mt-5 h-[64vh]'>
         <div className='rounded-lg border-border border-2 overflow-y-scroll bg-alt p-5 py-2 basis-[66%]'>
-          <p className='text-3xl text-white'>Performance Report </p>
+          <p className='text-2xl text-white'>Performance Report </p>
 
-          <div>
+          <div className='mt-3'>
+            <div className='flex'>
+              <div className='flex items-center'>
+                <div className='h-5 mr-2 rounded-md aspect-square bg-blue' />
+                <p>Coaches</p>
+              </div>
+
+              <div className='flex items-center ml-10'>
+                <div className='h-5 mr-2 rounded-md aspect-square bg-purple' />
+                <p>Users</p>
+              </div>
+            </div>
             <Line className='mt-5' options={options} data={data} />
           </div>
         </div>
