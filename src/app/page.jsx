@@ -47,8 +47,8 @@ export default function Home() {
       });
 
       if (!res.ok) {
-        let errorMessage = "Something went wrong";
-        console.log(res);
+         const errorData = await res.text();
+         throw new Error(errorData);
         try {
           const errorData = await res.json();
           errorMessage = errorData.message || errorMessage;

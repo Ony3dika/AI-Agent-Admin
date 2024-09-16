@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Dropdown from "@/components/dropdown";
 import { IoIosArrowDown } from "react-icons/io";
 import { RxReload } from "react-icons/rx";
+import { IoTrashOutline } from "react-icons/io5";
 import { CiSearch, CiExport } from "react-icons/ci";
 import { CSVLink } from "react-csv";
 import Image from "next/image";
@@ -15,6 +16,7 @@ const UsersPage = () => {
   const modalRef = useRef(null);
   const [error, setError] = useState(null);
   const [clients, setClients] = useState([]);
+  const [userID, setUserID] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
   // Fetch Clients
@@ -24,7 +26,7 @@ const UsersPage = () => {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${baseURL}/admin/users/all`, {
+      const res = await fetch(`${baseURL}/admin/users/all-users`, {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
@@ -42,11 +44,35 @@ const UsersPage = () => {
     }
   };
 
+  const deleteUser = async () => {
+    const access_token = sessionStorage.getItem("authAdmin");
+    setError(null);
+    setIsLoading(true);
+    try {
+      const res = await fetch(`${baseURL}/admin/users/delete/${userID}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+
+      if (!res.ok) {
+        const errorData = await res.text();
+        throw new Error(errorData);
+      }
+      setUserID(null);
+      fetchClients();
+    } catch (error) {
+      setError(error.message);
+      setIsLoading(false);
+    }
+  };
+
   const filteredClients = clients.filter(
-    (client) =>
-      client.email.toLowerCase().includes(searchQuery.toLowerCase()) 
-      // client.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      //  client.is_active.toLowerCase().includes(searchQuery.toLowerCase())
+    (client) => client.email.toLowerCase().includes(searchQuery.toLowerCase())
+    // client.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //  client.is_active.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   useEffect(() => {
@@ -198,7 +224,10 @@ const UsersPage = () => {
                   </td>
                   <td>
                     <button
-                      onClick={openModal}
+                      onClick={() => {
+                        openModal();
+                        setUserID(item.id);
+                      }}
                       className='bg-border m-1 px-4 py-1 flex items-center rounded-md'
                     >
                       Actions <IoIosArrowDown className='text-txt' />
@@ -215,8 +244,18 @@ const UsersPage = () => {
           <div
             onClick={handleModalClick}
             ref={modalRef}
-            className='h-[16%] aspect-square absolute bg-[#14161c] flex flex-col border border-border items-center justify-center right-20 top-40 rounded-md'
-          ></div>
+            className='h-[16%] aspect-square absolute bg-[#14161c] flex flex-col border border-border items-center text-txt justify-center right-20 top-40 rounded-md'
+          >
+            <button
+              // onClick={deleteUser}
+              className='flex py-1.5 hover:bg-slate-800 transition-all duration-200 ease-linear items-center mx-3 px-2 rounded'
+            >
+              <span className='text-txt2/60'>
+                <IoTrashOutline />
+              </span>
+              <span className='ml-2 text-txt'>Delete</span>
+            </button>
+          </div>
         </section>
       )}
     </main>

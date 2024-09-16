@@ -17,43 +17,49 @@ const SettingsPage = () => {
   const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   // Put Settings
-  async function handleSettings(e) {
+  const handleSettings = async (e) => {
     e.preventDefault();
     const access_token = sessionStorage.getItem("authAdmin");
     setError(null);
     setIsLoading(true);
     setSuccess(false);
 
-    // try {
-    //   const res = await fetch(`${baseURL}/users/update/profile`, {
-    //     method: "POST",
-    //     headers: {
-    //       Authorization: `Bearer ${access_token}`,
-    //     },
-    //     body: userData,
-    //   });
+    const userData = new FormData()
+    userData.append("first_name", firstName)
+    userData.append("last_name", lastName)
+    userData.append("avatar", imgUpload)
 
-    //   if (!res.ok) {
-    //     throw new Error("Failed");
-    //   }
+    try {
+      const res = await fetch(`${baseURL}/admin/users/update/profile`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        body: userData,
+      });
 
-    //   const data = await res.json();
+      if (!res.ok) {
+        const errorData = await res.text();
+        throw new Error(errorData);
+      }
 
-    //   setSuccess(true);
-    // } catch (error) {
-    //   setError(error.message);
-    //   console.log(error);
-    // } finally {
-    //   setIsLoading(false);
-    // }
-  }
+      const data = await res.json();
+      console.log(data);
+      setSuccess(true);
+    } catch (error) {
+      setError(error.message);
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (error || success) {
       const timer = setTimeout(() => {
         setError("");
         setSuccess(false);
-      }, 4000); // 3 seconds
+      }, 3000); // 3 seconds
 
       return () => clearTimeout(timer);
     }
@@ -133,16 +139,8 @@ const SettingsPage = () => {
               placeholder='Last name'
             />
           </div>
-          {/* Row 3 */}
-          <div className='flex flex-col'>
-            <label>Email</label>
-            <input
-              type='email'
-              value={email}
-              className='mt-2 px-4 py-2 rounded-lg text-txt2 placeholder:text-txt2 outline-none bg-[#1F232E] border-2 border-[#262A35]'
-              placeholder='Email'
-            />
-          </div>
+          {/* Row 2 */}
+          
           <div className='flex flex-col'>
             <label>Password</label>
             <input
