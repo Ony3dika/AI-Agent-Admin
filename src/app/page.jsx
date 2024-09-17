@@ -33,7 +33,6 @@ export default function Home() {
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
-
     const userData = new FormData();
     userData.append("username", email);
     userData.append("password", password);
@@ -47,8 +46,8 @@ export default function Home() {
       });
 
       if (!res.ok) {
-         const errorData = await res.text();
-         throw new Error(errorData);
+        const errorData = await res.text();
+        throw new Error(errorData);
         try {
           const errorData = await res.json();
           errorMessage = errorData.message || errorMessage;
@@ -78,36 +77,31 @@ export default function Home() {
   // Handle Forgot Password Modal Submit
   async function handleForgotPasswordSubmit(e) {
     e.preventDefault();
-    setError("");
-
-    const user = new FormData();
-    user.append("username", forgotPasswordEmail);
+    setError(null);
+    const user = {
+      email: forgotPasswordEmail,
+    };
     try {
       setIsLoading(true);
 
       const res = await fetch(`${baseURL}/auth/forgot-password/`, {
         method: "POST",
-        body: user,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
       });
 
       if (!res.ok) {
-        let errorMessage = "Something went wrong";
-        console.log(res);
-        try {
-          const errorData = await res.json();
-          errorMessage = errorData.message || errorMessage;
-        } catch (jsonError) {
-          console.error("Error parsing JSON:", jsonError);
-        }
-        setError(errorMessage);
-        setIsLoading(false);
-        return;
+        const errorData = await res.text();
+        throw new Error(errorData);
       }
       const data = await res.json();
     } catch (error) {
-      setIsLoading(false);
-      setError("Network error or server not reachable");
+      setError(error.message);
       console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -121,9 +115,7 @@ export default function Home() {
         onSubmit={handleSubmit}
         className='w-[30%] mt-5 flex text-sm flex-col px-6 py-10 rounded-2xl border-border/80 border-2 bg-[#1a1c25]/30 backdrop-blur-2xl'
       >
-        <p className='text-center text-white mb-5 text-lg'>
-          Admin Account
-        </p>
+        <p className='text-center text-white mb-5 text-lg'>Admin Account</p>
 
         {/* Email */}
         <label className='text-sm text-txt'>Enter Email</label>
@@ -189,7 +181,6 @@ export default function Home() {
             "Sign In"
           )}
         </button>
-       
       </form>
 
       {isModalOpen && (

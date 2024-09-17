@@ -31,7 +31,8 @@ const CoachPage = () => {
         },
       });
       if (!res.ok) {
-        throw new Error("Failed to fetch Coach");
+        const errorData = await res.text();
+        throw new Error(errorData);
       }
       const data = await res.json();
       setCoaches(data);
@@ -193,19 +194,17 @@ const CoachPage = () => {
                     <Image
                       width={700}
                       height={700}
-                      className="w-10 h-10 rounded-full mr-2"
+                      className='w-10 h-10 rounded-full mr-2'
                       src={item.avatar ? item.avatar : head}
                       alt='coach'
                     />
                     <div>
                       {item.name} <br />
-                      <span  className="text-xs text-txt2">{item.category}</span>
+                      <span className='text-xs text-txt2'>{item.category}</span>
                     </div>
                   </td>
                   <td>{item.email}</td>
-                  <td className='text-blue'>
-                    {item.status}
-                  </td>
+                  <td className='text-blue'>{item.status}</td>
                   <td>{item.views}</td>
                   <td>{item.role}</td>
 

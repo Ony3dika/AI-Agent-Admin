@@ -32,7 +32,8 @@ const UsersPage = () => {
         },
       });
       if (!res.ok) {
-        throw new Error("Failed to fetch Clients");
+        const errorData = await res.text();
+        throw new Error(errorData);
       }
       const data = await res.json();
       setClients(data);

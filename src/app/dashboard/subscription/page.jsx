@@ -30,7 +30,8 @@ const SubPage = () => {
         },
       });
       if (!res.ok) {
-        throw new Error("Failed to fetch Clients");
+        const errorData = await res.text();
+        throw new Error(errorData);
       }
       const data = await res.json();
       setSubs(data);
@@ -46,7 +47,6 @@ const SubPage = () => {
     (sub) =>
       sub.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       sub.email.toLowerCase().includes(searchQuery.toLowerCase())
-      
   );
 
   useEffect(() => {
