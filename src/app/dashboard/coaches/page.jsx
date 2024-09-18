@@ -2,12 +2,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import Dropdown from "@/components/dropdown";
 import { IoIosArrowDown } from "react-icons/io";
+import { TbListDetails } from "react-icons/tb";
+import { MdOutlineMoreHoriz } from "react-icons/md";
+
 import { RxReload } from "react-icons/rx";
 import { CiSearch, CiExport } from "react-icons/ci";
 import { CSVLink } from "react-csv";
 import Image from "next/image";
 import loader from "@/../../public/loader2.svg";
 import head from "@/../../public/profile.svg";
+import Link from "next/link";
 
 const CoachPage = () => {
   const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -146,7 +150,7 @@ const CoachPage = () => {
             <th className='text-start font-normal'>Status</th>
             <th className='text-start font-normal'>Views</th>
 
-            <th className='text-start font-normal'>Leads</th>
+            {/* <th className='text-start font-normal'>Leads</th> */}
             <th className='text-start font-normal'>Date Created</th>
             <th className='text-start font-normal rounded-tr-lg'>Action</th>
           </tr>
@@ -155,7 +159,7 @@ const CoachPage = () => {
         <tbody>
           {isLoading ? (
             <tr>
-              <td colSpan='7'>
+              <td colSpan='6'>
                 <center>
                   <Image src={loader} className='h-16' alt='loading' />
                   <p>Loading ...</p>
@@ -164,7 +168,7 @@ const CoachPage = () => {
             </tr>
           ) : error ? (
             <tr>
-              <td colSpan='7' className='text-center p-5'>
+              <td colSpan='6' className='text-center p-5'>
                 <p className='inline'>{error}</p>
 
                 <button
@@ -206,17 +210,17 @@ const CoachPage = () => {
                   <td>{item.email}</td>
                   <td className='text-blue'>{item.status}</td>
                   <td>{item.views}</td>
-                  <td>{item.role}</td>
+                  {/* <td>{item.role}</td> */}
 
                   <td>{formattedDate}</td>
 
                   <td>
-                    <button
-                      onClick={openModal}
-                      className='bg-border m-1 px-4 py-1 flex items-center rounded-md'
+                    <Link
+                    href={"/details"}
+                      className='bg-border w-fit text-txt m-1 px-4 py-1 flex items-center rounded-md'
                     >
-                      Actions <IoIosArrowDown className='text-txt' />
-                    </button>
+                      Details <MdOutlineMoreHoriz className='ml-2' />
+                    </Link>
                   </td>
                 </tr>
               );
@@ -224,7 +228,7 @@ const CoachPage = () => {
           )}
         </tbody>
       </table>
-      {isOpen && (
+      {/* {isOpen && (
         <section className='fixed top-0 left-0 w-screen z-20 h-screen bg-black/30 backdrop-blur rounded-md shadow-md'>
           <div
             onClick={handleModalClick}
@@ -232,7 +236,7 @@ const CoachPage = () => {
             className='h-[16%] aspect-square absolute bg-[#14161c] flex flex-col border border-border items-center justify-center right-20 top-40 rounded-md'
           ></div>
         </section>
-      )}
+      )} */}
     </main>
   );
 };

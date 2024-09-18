@@ -37,7 +37,7 @@ const UsersPage = () => {
       }
       const data = await res.json();
       setClients(data);
-      // console.log(data);
+      console.log(data);
       setIsLoading(false);
     } catch (error) {
       setError(error.message);
@@ -45,6 +45,7 @@ const UsersPage = () => {
     }
   };
 
+  //Delete USer
   const deleteUser = async () => {
     const access_token = sessionStorage.getItem("authAdmin");
     setError(null);
@@ -62,6 +63,8 @@ const UsersPage = () => {
         const errorData = await res.text();
         throw new Error(errorData);
       }
+      const data = await res.json();
+      console.log(data);
       setUserID(null);
       fetchClients();
     } catch (error) {
@@ -248,7 +251,7 @@ const UsersPage = () => {
             className='h-[16%] aspect-square absolute bg-[#14161c] flex flex-col border border-border items-center text-txt justify-center right-20 top-40 rounded-md'
           >
             <button
-              // onClick={deleteUser}
+              onClick={deleteUser}
               className='flex py-1.5 hover:bg-slate-800 transition-all duration-200 ease-linear items-center mx-3 px-2 rounded'
             >
               <span className='text-txt2/60'>

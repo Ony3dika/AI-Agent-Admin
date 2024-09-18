@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { CiSearch } from "react-icons/ci";
 import { IoAdd, IoCloseOutline } from "react-icons/io5";
 import { RxReload } from "react-icons/rx";
+import { FaEyeSlash, FaEye } from "react-icons/fa";
 import Image from "next/image";
 import profile from "../../../../../public/profile.svg";
 import loader from "../../../../../public/loader2.svg";
@@ -21,6 +22,9 @@ const RolePage = () => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("user");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   //fetch Users
   const fetchUsers = async () => {
@@ -52,6 +56,10 @@ const RolePage = () => {
     e.preventDefault();
     const access_token = sessionStorage.getItem("authAdmin");
     setError(null);
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
     setIsLoading(true);
     setSuccess(false);
     const userData = new FormData();
@@ -60,6 +68,8 @@ const RolePage = () => {
     userData.append("email", email);
     userData.append("role", role);
     userData.append("avatar", imgUpload);
+    userData.append("password", password);
+    userData.append("confirm_password", confirmPassword)
 
     try {
       const res = await fetch(`${baseURL}/admin/users/add/new/user`, {
@@ -193,7 +203,7 @@ const RolePage = () => {
       </div>
 
       {popUp && (
-        <div className='absolute border border-[#313542]/60 rounded-lg bg-alt h-full w-full top-0 left-0 p-5 text-white'>
+        <div className='absolute border overflow-y-scroll border-[#313542]/60 rounded-lg bg-alt h-full w-full top-0 left-0 p-5 text-white'>
           <div className='flex justify-between'>
             <p>Add Account</p>
 
@@ -203,23 +213,7 @@ const RolePage = () => {
               className='p-1 bg-[#292d39]  text-white rounded-full '
             />
           </div>
-          {isLoading ? (
-            <div className='w-full flex flex-col justify-center items-center mb-2'>
-              <Image src={loader} className='h-16' alt='Saving' />
-            </div>
-          ) : (
-            ""
-          )}
-          {error && (
-            <p className='w-full my-3 py-2 text-center text-primary font-medium rounded bg-red-200'>
-              {error}
-            </p>
-          )}
-          {success && (
-            <p className='w-full my-3 py-2 text-center text-primary font-medium rounded-xl bg-green-200'>
-              New User Added
-            </p>
-          )}
+
           <form onSubmit={addUser}>
             {" "}
             <div className='mt-3 flex flex-col justify-center items-center'>
@@ -278,7 +272,7 @@ const RolePage = () => {
                   type='email'
                   required
                   value={email}
-                  onChange={(e)=> setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                   className='mt-1 px-4 py-2 rounded-lg text-txt2 placeholder:text-txt2 outline-none bg-[#1F232E] border-2 border-[#262A35]'
                   placeholder='Email'
                 />
@@ -295,7 +289,60 @@ const RolePage = () => {
                   <option value='admin'>Admin</option>
                 </select>
               </div>
+              <div className='flex flex-col relative'>
+                <label>Password</label>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className='mt-1 px-4 py-2 rounded-lg text-txt2 placeholder:text-txt2 outline-none bg-[#1F232E] border-2 border-[#262A35]'
+                  placeholder='Password'
+                />{" "}
+                <button
+                  type='button'
+                  onClick={() => setShowPassword(!showPassword)}
+                  className='absolute right-3 top-1/2 transform translate-y-1/2 text-white'
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+              <div className='flex flex-col relative'>
+                <label>Confirm Password</label>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  required
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className='mt-1 px-4 py-2 rounded-lg text-txt2 placeholder:text-txt2 outline-none bg-[#1F232E] border-2 border-[#262A35]'
+                  placeholder='Password'
+                />
+                <button
+                  type='button'
+                  onClick={() => setShowPassword(!showPassword)}
+                  className='absolute right-3 top-1/2 transform translate-y-1/2 text-white'
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
             </section>
+            {isLoading ? (
+              <div className='w-full flex flex-col justify-center items-center mb-2'>
+                <Image src={loader} className='h-16' alt='Saving' />
+              </div>
+            ) : (
+              ""
+            )}
+            {error && (
+              <p className='w-full my-3 py-2 text-center text-primary font-medium rounded bg-red-200'>
+                {error}
+              </p>
+            )}
+            {success && (
+              <p className='w-full my-3 py-2 text-center text-primary font-medium rounded-xl bg-green-200'>
+                New User Added
+              </p>
+            )}
             <div className='flex justify-center'>
               <button
                 disabled={isLoading}

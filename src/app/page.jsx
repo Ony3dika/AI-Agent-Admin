@@ -14,20 +14,22 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [success2, setSuccess2] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
   const router = useRouter();
   const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {
-    if (error) {
+    if (error || success2) {
       const timer = setTimeout(() => {
         setError("");
+        setSuccess2(false)
       }, 3000); // 3 seconds
 
       return () => clearTimeout(timer);
     }
-  }, [error]);
+  }, [error, success2]);
 
   // Form Submit Function
   async function handleSubmit(e) {
@@ -48,15 +50,6 @@ export default function Home() {
       if (!res.ok) {
         const errorData = await res.text();
         throw new Error(errorData);
-        try {
-          const errorData = await res.json();
-          errorMessage = errorData.message || errorMessage;
-        } catch (jsonError) {
-          console.error("Error parsing JSON:", jsonError);
-        }
-        setError(errorMessage);
-        setIsLoading(false);
-        return;
       }
 
       const data = await res.json();
@@ -69,7 +62,7 @@ export default function Home() {
       e.target.reset(); // Reset the form
     } catch (error) {
       setIsLoading(false);
-      setError("Network error or server not reachable");
+      setError(error.message);
       console.error("Error:", error);
     }
   }
@@ -97,6 +90,7 @@ export default function Home() {
         throw new Error(errorData);
       }
       const data = await res.json();
+      setSuccess2(true);
     } catch (error) {
       setError(error.message);
       console.error("Error:", error);
@@ -200,6 +194,12 @@ export default function Home() {
                 required
                 className='w-full px-4 py-2 bg-transparent border-border outline-none text-txt border rounded-lg mb-4'
               />
+              {success2 && (
+                <p className='w-full my-3 py-2 text-center text-primary font-medium rounded-xl bg-green-200'>
+                  Check Your Email
+                </p>
+              )}
+
               <div className='flex justify-end'>
                 <button
                   type='button'
