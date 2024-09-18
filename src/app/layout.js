@@ -3,8 +3,8 @@ import "./globals.css";
 const font = Urbanist({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "AI Agent Admin",
-  description: "Admin Website",
+  title: "ProAgents Admin",
+  description: "Admin Website of ProAgents",
 };
 
 export default function RootLayout({ children }) {

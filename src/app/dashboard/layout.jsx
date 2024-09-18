@@ -47,8 +47,8 @@ export default function DashboardLayout({ children }) {
       <section className='basis-[20%] bg-alt border-r-2 border-border flex flex-col '>
         <div className='h-[70%] border-b-[1.5px] px-5 border-border'>
           <div className='flex items-center mt-5'>
-            <Image src={logo} className='h-10 mr-3' alt='AI-agent logo' />
-            <p className='text-white text-xl'>AI Agent</p>
+            <Image src={logo} className='h-10 mr-3' alt='ProAgents' />
+            <p className='text-white text-xl'>ProAgents</p>
           </div>
           <div className='flex flex-col mt-10'>
             {menu.map((item, index) => {

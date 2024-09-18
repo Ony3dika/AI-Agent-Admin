@@ -18,6 +18,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import Link from "next/link";
 
 ChartJS.register(
   CategoryScale,
@@ -124,7 +125,7 @@ const DashPage = () => {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${baseURL}/admin/users/all`, {
+      const res = await fetch(`${baseURL}/admin/users/all-users`, {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
@@ -301,27 +302,38 @@ const DashPage = () => {
         <div className='basis-[32%] rounded-lg border-border border-2 bg-alt overflow-y-scroll p-5'>
           <p className='text-white text-xl'>Recent</p>
 
-          <div className='mt-5'>
-            {coaches.map((coach) => (
-              <div
-                key={coach.id}
-                className='flex justify-between items-center py-3 border-b-2 border-border'
-              >
-                <div className='flex items-center'>
-                  <Image
-                    src={coach.avatar ? coach.avatar : head}
-                    width={700}
-                    height={700}
-                    className='w-10 h-10 rounded-full mr-2'
-                    alt='coach'
-                  />
-                  <p className='text-white text-sm'>{coach.name}</p>
+          <div className='my-5'>
+            {coaches
+              .slice(-6, -1)
+              .reverse()
+              .map((coach) => (
+                <div
+                  key={coach.id}
+                  className='flex justify-between items-center py-3 border-b-2 border-border'
+                >
+                  <div className='flex items-center'>
+                    <Image
+                      src={coach.avatar ? coach.avatar : head}
+                      width={700}
+                      height={700}
+                      className='w-10 h-10 rounded-full mr-2'
+                      alt='coach'
+                    />
+                    <p className='text-white text-sm'>{coach.name}</p>
+                  </div>
+                  <div>
+                    <p className='text-white text-sm'>{coach.status}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className='text-white text-sm'>{coach.status}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+          </div>
+          <div className='flex'>
+            <Link
+              href={"/dashboard/coaches"}
+              className='text-blue rounded-lg border-2 border-blue py-2 text-center w-full'
+            >
+              See All Coaches
+            </Link>
           </div>
         </div>
       </section>

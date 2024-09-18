@@ -1,10 +1,7 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Dropdown from "@/components/dropdown";
-import { IoIosArrowDown } from "react-icons/io";
-import { TbListDetails } from "react-icons/tb";
 import { MdOutlineMoreHoriz } from "react-icons/md";
-
 import { RxReload } from "react-icons/rx";
 import { CiSearch, CiExport } from "react-icons/ci";
 import { CSVLink } from "react-csv";
@@ -12,15 +9,15 @@ import Image from "next/image";
 import loader from "@/../../public/loader2.svg";
 import head from "@/../../public/profile.svg";
 import Link from "next/link";
+import { useStore } from "../../../store";
 
 const CoachPage = () => {
   const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
-  const modalRef = useRef(null);
   const [coaches, setCoaches] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const updateCoach = useStore((state) => state.updateCoach);
 
   // Fetch Coaches
   const fetchCoaches = async () => {
@@ -56,27 +53,7 @@ const CoachPage = () => {
     fetchCoaches();
   }, []);
 
-  const openModal = () => {
-    setIsOpen(true);
-  };
-
-  const handleModalClick = (e) => {
-    e.stopPropagation(); // Prevent closing modal when modal content is clicked
-  };
-
-  useEffect(() => {
-    const handleOutsideClick = (e) => {
-      if (modalRef.current && !modalRef.current.contains(e.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
+  
 
   return (
     <main className='text-txt mt-5 h-[90vh] overflow-y-scroll'>
@@ -216,7 +193,18 @@ const CoachPage = () => {
 
                   <td>
                     <Link
-                    href={"/details"}
+                    onClick={()=>{
+                       updateCoach({
+                         name: item.name,
+                         voice: item.voice,
+                         language: item.language,
+                         status: item.status,
+                         category:item.category,
+                         avatar: item.avatar,
+                         id: item.id,
+                       });
+                    }}
+                      href={"/details"}
                       className='bg-border w-fit text-txt m-1 px-4 py-1 flex items-center rounded-md'
                     >
                       Details <MdOutlineMoreHoriz className='ml-2' />
@@ -228,15 +216,6 @@ const CoachPage = () => {
           )}
         </tbody>
       </table>
-      {/* {isOpen && (
-        <section className='fixed top-0 left-0 w-screen z-20 h-screen bg-black/30 backdrop-blur rounded-md shadow-md'>
-          <div
-            onClick={handleModalClick}
-            ref={modalRef}
-            className='h-[16%] aspect-square absolute bg-[#14161c] flex flex-col border border-border items-center justify-center right-20 top-40 rounded-md'
-          ></div>
-        </section>
-      )} */}
     </main>
   );
 };
