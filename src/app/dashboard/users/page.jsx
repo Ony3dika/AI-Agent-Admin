@@ -127,7 +127,7 @@ const UsersPage = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className='bg-transparent basis-full outline-none'
-            placeholder='Search Users'
+            placeholder='Search User&apos;s Email'
           />
         </section>
 
@@ -170,24 +170,24 @@ const UsersPage = () => {
       <table className='table-fixed w-full text-sm'>
         <thead className='bg-[#262a35]'>
           <tr className='text-txt2'>
-            <th className='text-start font-normal p-3 rounded-tl-lg'>
+            <th className='text-center font-normal p-3 rounded-tl-lg'>
               Username
             </th>
-            <th className='text-start font-normal'>Email</th>
-            <th className='text-start font-normal'>Industry</th>
-            <th className='text-start font-normal'>Role</th>
-            <th className='text-start font-normal'>Workspace</th>
-            <th className='text-start font-normal'>Coaches</th>
-            <th className='text-start font-normal'>Credit Balance</th>
-            <th className='text-start font-normal'>Status</th>
-            <th className='text-start font-normal rounded-tr-lg'>Action</th>
+            <th className='text-center font-normal'>Email</th>
+            <th className='text-center font-normal'>Industry</th>
+            <th className='text-center font-normal'>Role</th>
+            <th className='text-center font-normal'>Workspace</th>
+            <th className='text-center font-normal'>Coaches</th>
+            <th className='text-center font-normal'>Credit Balance</th>
+            {/* <th className='text-center font-normal'>Status</th> */}
+            <th className='text-center font-normal rounded-tr-lg'>Action</th>
           </tr>
         </thead>
 
         <tbody>
           {isLoading ? (
             <tr>
-              <td colSpan='9'>
+              <td colSpan='8'>
                 <center>
                   <Image src={loader} className='h-16' alt='loading' />
                   <p>Loading ...</p>
@@ -196,7 +196,7 @@ const UsersPage = () => {
             </tr>
           ) : error ? (
             <tr>
-              <td colSpan='9' className='text-center p-5'>
+              <td colSpan='8' className='text-center p-5'>
                 <p className='inline'>{error}</p>
 
                 <button
@@ -217,16 +217,16 @@ const UsersPage = () => {
                   key={index}
                 >
                   <td className='p-3'>{item.first_name}</td>
-                  <td>{item.email}</td>
-                  <td>{item.industry}</td>
-                  <td>{item.role}</td>
-                  <td>{item.workspace}</td>
-                  <td>{item.coach}</td>
+                  <td className=''>{item.email}</td>
+                  <td className='text-center'>{item.industry}</td>
+                  <td className='text-center'>{item.role}</td>
+                  <td className='text-center'>{item.total_workspaces}</td>
+                  <td className='text-center'>{item.total_coach}</td>
                   <td className='text-center'>{item.credits}</td>
-                  <td className='text-blue'>
+                  {/* <td className='text-blue'>
                     {item.is_active ? "Online" : "Offline"}
-                  </td>
-                  <td>
+                  </td> */}
+                  <td className="flex justify-center">
                     <button
                       onClick={() => {
                         openModal();
@@ -234,7 +234,7 @@ const UsersPage = () => {
                       }}
                       className='bg-border m-1 px-4 py-1 flex items-center rounded-md'
                     >
-                      Actions <IoIosArrowDown className='text-txt' />
+                      Actions <IoIosArrowDown className='text-txt ml-2' />
                     </button>
                   </td>
                 </tr>
@@ -248,7 +248,7 @@ const UsersPage = () => {
           <div
             onClick={handleModalClick}
             ref={modalRef}
-            className='h-[16%] aspect-square absolute bg-[#14161c] flex flex-col border border-border items-center text-txt justify-center right-20 top-40 rounded-md'
+            className='h-[10%] absolute bg-[#14161c] flex flex-col border border-border items-center text-txt justify-center right-20 top-40 rounded-md'
           >
             <button
               onClick={deleteUser}

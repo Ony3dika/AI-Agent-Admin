@@ -75,7 +75,7 @@ const CoachPage = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className='bg-transparent basis-full outline-none'
-            placeholder='Search Coaches'
+            placeholder='Search Coach'
           />
         </section>
 
