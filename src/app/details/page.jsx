@@ -36,7 +36,7 @@ const DetailsPage = () => {
   }, []);
 
   return (
-    <main className='text-white '>
+    <main className='text-white'>
       <table className='table-fixed w-full text-sm'>
         <thead className='bg-[#262a35]'>
           <tr className='text-txt2'>
@@ -57,7 +57,7 @@ const DetailsPage = () => {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
             const day = String(date.getDate()).padStart(2, "0");
-            const formattedDate = `${year}-${month}-${day}`;
+                const formattedDate = `${day}-${month}-${year}`;
             return (
               <tr
                 className={`text-white border-y border-[#262a35] ${
@@ -66,10 +66,10 @@ const DetailsPage = () => {
                 key={index}
               >
                 <td className='p-3 flex items-center'>{item.name}</td>
-                <td>{item.email}</td>
-                <td>{item.phone}</td>
-                <td>{formattedDate}</td>
-                <td>
+                <td className='text-center'>{item.email}</td>
+                <td className='text-center'>{item.phone}</td>
+                <td className='text-center'>{formattedDate}</td>
+                <td className="flex justify-center">
                   <button
                     // onClick={() => {
                     //   openModal();

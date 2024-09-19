@@ -37,7 +37,7 @@ const CoachPage = () => {
       }
       const data = await res.json();
       setCoaches(data);
-      console.log(data);
+      // console.log(data);
       setIsLoading(false);
     } catch (error) {
       setError(error.message);
@@ -52,8 +52,6 @@ const CoachPage = () => {
   useEffect(() => {
     fetchCoaches();
   }, []);
-
-  
 
   return (
     <main className='text-txt mt-5 h-[90vh] overflow-y-scroll'>
@@ -163,7 +161,7 @@ const CoachPage = () => {
               const year = date.getFullYear();
               const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
               const day = String(date.getDate()).padStart(2, "0");
-              const formattedDate = `${year}-${month}-${day}`;
+              const formattedDate = `${day}-${month}-${year}`;
               return (
                 <tr
                   className={`text-white border-y border-[#262a35] ${
@@ -193,17 +191,17 @@ const CoachPage = () => {
 
                   <td>
                     <Link
-                    onClick={()=>{
-                       updateCoach({
-                         name: item.name,
-                         voice: item.voice,
-                         language: item.language,
-                         status: item.status,
-                         category:item.category,
-                         avatar: item.avatar,
-                         id: item.id,
-                       });
-                    }}
+                      onClick={() => {
+                        updateCoach({
+                          name: item.name,
+                          voice: item.voice,
+                          language: item.language,
+                          status: item.status,
+                          category: item.category,
+                          avatar: item.avatar,
+                          id: item.id,
+                        });
+                      }}
                       href={"/details"}
                       className='bg-border w-fit text-txt m-1 px-4 py-1 flex items-center rounded-md'
                     >

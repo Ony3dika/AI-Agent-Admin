@@ -140,16 +140,16 @@ const SubPage = () => {
       <table className='table-fixed w-full text-sm'>
         <thead className='bg-[#262a35]'>
           <tr className='text-txt2'>
-            <th className='text-start font-normal p-3 rounded-tl-lg'>
+            <th className='text-center font-normal p-3 rounded-tl-lg'>
               Customer
             </th>
-            <th className='text-start font-normal'>Amount Paid</th>
-            <th className='text-start font-normal'>Credit Units</th>
-            <th className='text-start font-normal'>Credit Left</th>
+            <th className='text-center font-normal'>Amount Paid</th>
+            <th className='text-center font-normal'>Credit Units</th>
+            <th className='text-center font-normal'>Credit Left</th>
 
-            <th className='text-start font-normal'>Status</th>
-            <th className='text-start font-normal'>Date Subscribed</th>
-            <th className='text-start font-normal rounded-tr-lg'>Action</th>
+            <th className='text-center font-normal'>Status</th>
+            <th className='text-center font-normal'>Date Subscribed</th>
+            <th className='text-centerfont-normal rounded-tr-lg'>Action</th>
           </tr>
         </thead>
 
@@ -178,6 +178,12 @@ const SubPage = () => {
             </tr>
           ) : (
             filteredSubs.map((item, index) => {
+               const createdAt = item.created_at;
+               const date = new Date(createdAt);
+               const year = date.getFullYear();
+               const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+               const day = String(date.getDate()).padStart(2, "0");
+               const formattedDate = `${day}-${month}-${year}`;
               return (
                 <tr
                   className={`text-white border-y border-[#262a35] ${
@@ -185,16 +191,16 @@ const SubPage = () => {
                   }`}
                   key={index}
                 >
-                  <td className='p-3'>{item.first_name}</td>
-                  <td>{item.email}</td>
-                  <td>{item.credits}</td>
-                  <td>{item.industry}</td>
-                  <td className='text-blue'>
+                  <td className='p-3 text-center'>{item.first_name}</td>
+                  <td className='text-center'>{item.email}</td>
+                  <td className='text-center'>{item.credits}</td>
+                  <td className='text-center'> {item.industry}</td>
+                  <td className='text-blue text-center'>
                     {item.is_active ? "Online" : "Offline"}
                   </td>
-                  <td>{item.coach}</td>
+                  <td className='text-center'>{formattedDate}</td>
 
-                  <td>
+                  <td className='flex justify-center'>
                     <button
                       onClick={openModal}
                       className='bg-border m-1 px-4 py-1 flex items-center rounded-md'
