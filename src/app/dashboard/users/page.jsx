@@ -7,7 +7,7 @@ import { IoTrashOutline } from "react-icons/io5";
 import { CiSearch, CiExport } from "react-icons/ci";
 import { CSVLink } from "react-csv";
 import Image from "next/image";
-import loader from "@/../../public/loader2.svg";
+import loader from "../../../../public/loader2.svg";
 
 const UsersPage = () => {
   const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
