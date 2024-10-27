@@ -37,7 +37,7 @@ const UsersPage = () => {
       }
       const data = await res.json();
       setClients(data);
-      console.log(data);
+      // console.log(data);
       setIsLoading(false);
     } catch (error) {
       setError(error.message);

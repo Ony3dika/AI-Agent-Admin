@@ -57,7 +57,7 @@ const DetailsPage = () => {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
             const day = String(date.getDate()).padStart(2, "0");
-                const formattedDate = `${day}-${month}-${year}`;
+            const formattedDate = `${day}-${month}-${year}`;
             return (
               <tr
                 className={`text-white border-y border-[#262a35] ${

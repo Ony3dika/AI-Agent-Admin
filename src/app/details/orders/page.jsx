@@ -71,7 +71,7 @@ const OrdersPage = () => {
                     key={index}
                   >
                     <td className='p-3 flex items-center text-xs'>{item.id}</td>
-                    <td className='text-center'>{item.lead.email}</td>
+                    <td className='text-center'>{item.email}</td>
                     <td className='text-center'>{item.amount}</td>
                     <td className='text-center'>{item.currency}</td>
                     <td className='text-center'>{formattedDate}</td>

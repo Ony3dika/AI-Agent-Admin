@@ -100,7 +100,7 @@ const DashPage = () => {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${baseURL}/admin/coaches/`, {
+      const res = await fetch(`${baseURL}/admin/coaches/?skip=0&limit=99`, {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
@@ -109,7 +109,7 @@ const DashPage = () => {
         throw new Error("Failed to fetch Coaches");
       }
       const data = await res.json();
-      console.log(data);
+      // console.log(data);
       setCoaches(data);
       setIsLoading(false);
     } catch (error) {
@@ -134,7 +134,7 @@ const DashPage = () => {
         throw new Error("Failed");
       }
       const data = await res.json();
-      console.log(data);
+      // console.log(data);
       setUsers(data);
       setIsLoading(false);
     } catch (error) {

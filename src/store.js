@@ -24,6 +24,7 @@ export const useStore = create(
         category: "",
         id: "",
         avatar: "",
+        date:""
       },
       updateCoach: (newCoach) =>
         set((state) => ({

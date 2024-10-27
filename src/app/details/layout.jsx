@@ -45,7 +45,7 @@ const DetailsLayout = ({ children }) => {
           {/* Date */}
           <div>
             <p className='text-txt text-sm'>Date Created</p>
-            <p>21/12/2024</p>
+            <p>{coach.date}</p>
             <p className='text-txt text-sm mt-5'>Status</p>
             <p>{coach.status}</p>
           </div>

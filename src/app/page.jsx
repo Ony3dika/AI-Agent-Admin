@@ -101,7 +101,13 @@ export default function Home() {
   return (
     <main className='min-h-screen flex items-center justify-center flex-col bg-gradient-to-bl from-[#0d171f] via-primary to-[#0d171f]'>
       <section>
-        <Image src={agent} className='h-36' alt='ai-agent' />
+        <Image
+          src={agent}
+          width={700}
+          height={700}
+          className='h-20'
+          alt='ai-agent'
+        />
       </section>
 
       <form

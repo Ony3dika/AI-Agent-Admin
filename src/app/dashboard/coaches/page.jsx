@@ -26,7 +26,7 @@ const CoachPage = () => {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${baseURL}/admin/coaches/`, {
+      const res = await fetch(`${baseURL}/admin/coaches/?skip=0&limit=99`, {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
@@ -173,7 +173,7 @@ const CoachPage = () => {
                     <Image
                       width={700}
                       height={700}
-                      className='w-10 h-10 rounded-full mr-2'
+                      className='w-10 h-10 rounded-full mr-2 object-center object-cover'
                       src={item.avatar ? item.avatar : head}
                       alt='coach'
                     />
@@ -200,6 +200,7 @@ const CoachPage = () => {
                           category: item.category,
                           avatar: item.avatar,
                           id: item.id,
+                          date:formattedDate
                         });
                       }}
                       href={"/details"}

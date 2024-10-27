@@ -95,7 +95,7 @@ const RolePage = () => {
     }
   };
   const filteredUsers = users.filter((client) =>
-    client.role.toLowerCase().includes(searchQuery.toLowerCase())
+    client.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   useEffect(() => {
@@ -129,7 +129,7 @@ const RolePage = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className='bg-transparent basis-full outline-none'
-            placeholder="Search User's Role"
+            placeholder="Search User's Email"
           />
         </section>
 
